@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#090b10">
+<title>Veyl AI — Wa'ie</title>
+<style>
+:root{
+ --bg:#090b10;--panel:#10131b;--panel2:#151925;--line:rgba(255,255,255,.075);
+ --text:#edf0f7;--muted:#858da0;--green:#8cffc1;--green2:#39d98a;
+ --purple:#b59aff;--danger:#ff7f91;--radius:18px;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;background:
+ radial-gradient(900px 600px at 80% -10%,rgba(112,81,190,.13),transparent 60%),
+ radial-gradient(700px 500px at 0% 100%,rgba(43,178,118,.08),transparent 60%),var(--bg);
+ color:var(--text);overflow:hidden}
+button,input,textarea{font:inherit}
+button{cursor:pointer;color:inherit}
+.app{height:100dvh;display:grid;grid-template-columns:252px minmax(0,1fr);gap:0}
+.sidebar{background:rgba(13,16,23,.88);border-right:1px solid var(--line);padding:19px 14px;display:flex;flex-direction:column;min-width:0;z-index:5}
+.brand{display:flex;align-items:center;gap:11px;padding:3px 8px 24px}
+.logo{height:37px;width:37px;border-radius:13px;background:linear-gradient(145deg,#a4ffd0,#47d991 55%,#8d76db);display:grid;place-items:center;color:#07120c;font-weight:950;font-size:20px;box-shadow:0 0 28px #5df0a329}
+.brand-name{font-weight:800;letter-spacing:.2px;font-size:16px}.brand-sub{font-size:10px;color:var(--muted);letter-spacing:1.8px;margin-top:2px}
+.new-chat{border:1px solid rgba(140,255,193,.23);background:linear-gradient(110deg,rgba(140,255,193,.12),rgba(181,154,255,.09));padding:12px 13px;border-radius:13px;text-align:left;font-weight:700;display:flex;gap:10px;align-items:center}
+.new-chat:hover{border-color:rgba(140,255,193,.55);background:rgba(140,255,193,.15)}
+.nav-label{font-size:10px;letter-spacing:1.6px;color:#697184;font-weight:800;padding:25px 10px 9px}
+.nav{display:grid;gap:4px}
+.nav button,.project-link{border:0;background:transparent;text-align:left;color:#aab1c1;padding:10px 11px;border-radius:10px;display:flex;align-items:center;gap:11px;font-size:13px}
+.nav button:hover,.nav button.active,.project-link:hover{background:#ffffff0a;color:#fff}
+.nav button.active{box-shadow:inset 2px 0 var(--green);color:var(--green)}
+.ico{width:18px;text-align:center;color:#8e97aa;font-size:15px}
+.project-link{font-size:12px;padding:8px 11px}
+.project-dot{width:7px;height:7px;border-radius:50%;background:var(--purple);box-shadow:0 0 10px #b59aff80}
+.sidebar-bottom{margin-top:auto}
+.profile{border-top:1px solid var(--line);padding:15px 6px 2px;display:flex;align-items:center;gap:10px}
+.avatar{width:34px;height:34px;border-radius:12px;background:linear-gradient(145deg,#b59aff,#4a3978);display:grid;place-items:center;font-weight:800;color:white}
+.profile-name{font-size:12px;font-weight:700}.profile-role{font-size:10px;color:var(--muted);margin-top:3px}
+.main{min-width:0;display:flex;flex-direction:column;position:relative}
+.topbar{height:66px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 25px;background:#0b0e15a8;backdrop-filter:blur(18px)}
+.top-left,.top-right{display:flex;align-items:center;gap:12px;min-width:0}
+.mobile-menu{display:none}
+.breadcrumb{font-size:12px;color:var(--muted)}.breadcrumb b{color:#e9edf5;font-weight:650}
+.model-select{border:1px solid var(--line);background:#141925;color:#dfe5ef;padding:9px 12px;border-radius:11px;font-size:12px;outline:none;max-width:180px}
+.status{font-size:11px;color:var(--green);display:flex;align-items:center;gap:7px}
+.status:before{content:"";width:6px;height:6px;background:var(--green2);border-radius:50%;box-shadow:0 0 10px var(--green2)}
+.icon-btn{height:35px;width:35px;border:1px solid var(--line);background:#ffffff05;border-radius:11px;color:#aeb5c5}
+.icon-btn:hover{background:#ffffff10}
+.workspace{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 270px}
+.chat-area{display:flex;flex-direction:column;min-width:0;min-height:0}
+.chat-scroll{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-gutter:stable;padding:34px clamp(18px,5vw,70px) 42px;scroll-padding-bottom:42px}
+.welcome{max-width:760px;margin:7vh auto 0}
+.eyebrow{font-size:10px;letter-spacing:2.5px;color:var(--green);font-weight:800;display:flex;align-items:center;gap:9px}
+.eyebrow:before{content:"";height:1px;width:24px;background:var(--green)}
+h1{font-size:clamp(32px,5vw,49px);line-height:1.08;letter-spacing:-2px;margin:18px 0 12px;font-weight:750}
+h1 span{background:linear-gradient(95deg,#a8ffd0 5%,#c3adff 75%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.intro{font-size:14px;line-height:1.7;color:#929bad;max-width:510px}
+.quick-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:30px;max-width:680px}
+.quick{border:1px solid var(--line);background:linear-gradient(145deg,#151a26b8,#10131b);padding:15px;border-radius:15px;text-align:left;transition:.2s}
+.quick:hover{transform:translateY(-2px);border-color:#8cffc14a;background:#17221f}
+.quick-icon{font-size:17px;margin-bottom:12px}.quick b{display:block;font-size:12px;margin-bottom:5px}.quick small{color:var(--muted);font-size:11px;line-height:1.5}
+.messages{max-width:800px;margin:0 auto;display:grid;gap:22px}
+.msg{display:flex;gap:12px;align-items:flex-start}.msg.user{flex-direction:row-reverse}
+.msg-avatar{width:30px;height:30px;flex:0 0 30px;border-radius:10px;background:#1a2630;color:var(--green);display:grid;place-items:center;font-size:12px;font-weight:800}
+.msg.user .msg-avatar{background:#29213c;color:#c7b3ff}
+.msg-body{max-width:min(82%,680px);font-size:13px;line-height:1.75;color:#dce2ed}
+.msg.user .msg-body{background:#191e2a;padding:11px 14px;border:1px solid var(--line);border-radius:15px 5px 15px 15px}
+.msg.ai .msg-body{padding:2px 0}
+.codebox{margin-top:12px;border:1px solid var(--line);border-radius:13px;overflow:hidden;background:#0a0d13}
+.code-head{padding:9px 12px;display:flex;justify-content:space-between;color:#9da7ba;font-size:10px;background:#ffffff05}
+.codebox pre{margin:0;padding:14px;overflow:auto;color:#b8f5d2;font:11px/1.7 ui-monospace,monospace}
+.composer-wrap{flex:0 0 auto;position:relative;z-index:2;padding:12px clamp(14px,4vw,54px) 28px;background:linear-gradient(180deg,transparent,rgba(9,11,16,.94) 24%)}
+.composer{max-width:800px;margin:auto;border:1px solid #ffffff18;background:linear-gradient(145deg,#171c28,#11151e);border-radius:18px;padding:12px 13px 10px;box-shadow:0 15px 50px #0005}
+.composer:focus-within{border-color:#8cffc15c;box-shadow:0 0 0 3px #8cffc10b,0 15px 50px #0005}
+.image-preview{display:flex;gap:8px;flex-wrap:wrap;padding:4px 2px 10px}
+.image-preview:empty{display:none}
+.image-preview img{width:58px;height:58px;object-fit:cover;border-radius:10px;border:1px solid #8cffc155}
+.image-preview .image-name{font-size:9px;color:#9ca7b9;align-self:center}
+textarea{display:block;width:100%;resize:none;min-height:48px;max-height:150px;border:0;outline:0;background:transparent;color:var(--text);font-size:13px;line-height:1.6;padding:5px 4px}
+textarea::placeholder{color:#687184}
+.composer-tools{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.tool-left,.tool-right{display:flex;align-items:center;gap:6px}
+.tool{border:0;background:transparent;color:#8d96a9;border-radius:9px;padding:7px 9px;font-size:11px}
+.tool:hover{background:#ffffff0b;color:#e8edf5}
+.send{height:34px;width:37px;border:0;border-radius:11px;background:var(--green);color:#07130c;font-size:16px;font-weight:900}
+.send:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.hint{text-align:center;font-size:9px;color:#596174;margin-top:9px}
+.right-panel{border-left:1px solid var(--line);background:#0e1119a8;padding:20px 15px;overflow:auto}
+.panel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:17px}
+.panel-title{font-size:12px;font-weight:750}.panel-kicker{font-size:9px;color:#747e91;letter-spacing:1.5px}
+.panel-card{border:1px solid var(--line);background:#141925a8;border-radius:14px;padding:13px;margin-bottom:11px}
+.panel-card h3{font-size:11px;margin:0 0 10px;color:#dfe5ef}
+.provider-row{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:#aeb6c6;padding:7px 0}
+.provider-state{font-size:9px;color:var(--green);background:#8cffc112;padding:4px 7px;border-radius:20px}
+.mini-bar{height:5px;background:#252b39;border-radius:10px;overflow:hidden;margin-top:8px}.mini-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--purple));border-radius:10px}
+.file{display:flex;gap:8px;align-items:center;padding:7px 0;color:#9ba5b7;font-size:10px}.file span:first-child{font-size:13px}
+.panel-action{width:100%;border:1px dashed #ffffff20;background:transparent;color:#9aa4b7;padding:9px;border-radius:10px;font-size:10px}
+.panel-action:hover{border-color:#8cffc15c;color:var(--green)}
+.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#1a2230;border:1px solid #8cffc144;color:#dfffee;padding:10px 15px;border-radius:12px;font-size:12px;transition:.25s;z-index:20}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.overlay{display:none}
+@media(max-width:980px){.workspace{grid-template-columns:minmax(0,1fr)}.right-panel{display:none}}
+@media(max-width:680px){
+ /* Mobile: satu scroll utama pada seluruh dokumen, tiada nested scroll */
+ html,body{height:auto;min-height:100%;overflow-x:hidden;overflow-y:auto}
+ body{min-height:100dvh;overscroll-behavior-y:auto;-webkit-overflow-scrolling:touch}
+ .app{height:auto;min-height:100dvh;grid-template-columns:1fr;overflow:visible}
+ .main{min-height:100dvh;overflow:visible}
+ .topbar{position:sticky;top:0;z-index:3;flex:0 0 59px}
+ .workspace{flex:1 0 auto;min-height:calc(100dvh - 59px);display:flex;flex-direction:column;overflow:visible}
+ .chat-area{display:flex;flex-direction:column;flex:1 0 auto;min-height:calc(100dvh - 59px);overflow:visible}
+ .chat-scroll{flex:0 0 auto;min-height:calc(100dvh - 245px);max-height:none;overflow:visible;padding:20px 16px 28px;scroll-padding-bottom:24px}
+ .composer-wrap{position:relative;bottom:auto;flex:0 0 auto;margin-top:0;padding:10px 10px calc(18px + env(safe-area-inset-bottom));background:linear-gradient(180deg,rgba(9,11,16,.92),#090b10 35%)}
+ .sidebar{position:fixed;inset:0 auto 0 0;width:265px;transform:translateX(-105%);transition:.25s;box-shadow:20px 0 70px #0008}
+ .sidebar.open{transform:translateX(0)}.overlay.show{display:block;position:fixed;inset:0;background:#0009;z-index:4}
+ .mobile-menu{display:inline-grid;place-items:center}.topbar{height:59px;padding:0 13px}.breadcrumb{display:none}
+ .model-select{max-width:145px;padding:8px;font-size:10px}.status{font-size:0}.status:before{width:7px;height:7px}
+ .welcome{margin:8vh auto 0}h1{letter-spacing:-1.4px}
+ .quick-grid{gap:8px;margin-top:24px}.quick{padding:12px}.quick small{font-size:10px}
+ .composer{border-radius:15px}.hint{font-size:8px}
+}
+@media(max-width:390px){.quick-grid{grid-template-columns:1fr}.quick{display:flex;gap:12px;align-items:center}.quick-icon{margin:0}.quick small{display:none}}
+</style>
+</head>
+<body>
+<div class="app">
+ <aside class="sidebar" id="sidebar">
+  <div class="brand"><div class="logo">V</div><div><div class="brand-name">Veyl AI</div><div class="brand-sub">BUILT BY WA'IE</div></div></div>
+  <button class="new-chat" id="newChat"><span>＋</span> Perbualan baharu</button>
+  <div class="nav-label">WORKSPACE</div>
+  <nav class="nav">
+   <button class="active"><span class="ico">◈</span> Chat AI</button>
+   <button data-toast="Editor kod akan dibina dalam milestone seterusnya."><span class="ico">⌘</span> Code Studio</button>
+   <button data-toast="Pengurusan projek akan disambungkan kemudian."><span class="ico">▧</span> Projek</button>
+   <button data-toast="Sejarah perbualan akan disambungkan ke database."><span class="ico">◷</span> Sejarah</button>
+  </nav>
+  <div class="nav-label">PROJEK TERKINI</div>
+  <div class="project-link"><i class="project-dot"></i> Veyl AI Core</div>
+  <div class="project-link"><i class="project-dot" style="background:#72a9ff"></i> Website Portfolio</div>
+  <div class="project-link"><i class="project-dot" style="background:#ffbd75"></i> WhatsApp Bot</div>
+  <div class="sidebar-bottom">
+   <div class="nav-label">PREFERENCES</div>
+   <nav class="nav">
+    <button data-toast="Tetapan provider akan diaktifkan selepas backend siap."><span class="ico">⚙</span> Tetapan & API Keys</button>
+    <button data-toast="Dokumentasi Veyl AI akan ditambah kemudian."><span class="ico">ⓘ</span> Dokumentasi</button>
+   </nav>
+   <div class="profile"><div class="avatar">W</div><div><div class="profile-name">Wa'ie</div><div class="profile-role">Creator · Personal workspace</div></div><span style="margin-left:auto;color:#6f788a">•••</span></div>
+  </div>
+ </aside>
+ <div class="overlay" id="overlay"></div>
+ <main class="main">
+  <header class="topbar">
+   <div class="top-left"><button class="icon-btn mobile-menu" id="menuBtn">☰</button><div class="breadcrumb">Workspace <span style="color:#4f586b">/</span> <b>Chat AI</b></div></div>
+   <div class="top-right">
+    <div class="status">Local preview</div>
+    <select class="model-select" id="model"><option>Veyl Auto · Soon</option><option>Groq · Soon</option><option>DeepSeek · Soon</option></select>
+    <button class="icon-btn" title="Tetapan" id="settingsBtn">⚙</button>
+   </div>
+  </header>
+  <section class="workspace">
+   <div class="chat-area">
+    <div class="chat-scroll" id="chatScroll">
+     <div class="welcome" id="welcome">
+      <div class="eyebrow">YOUR CREATIVE AI WORKSPACE</div>
+      <h1>Idea kau,<br><span>jadi kenyataan.</span></h1>
+      <p class="intro">Selamat datang ke Veyl AI. Ruang kerja pintar untuk bina website, aplikasi, automasi dan projek digital — semuanya dalam satu tempat.</p>
+      <div class="quick-grid">
+       <button class="quick" data-prompt="Bina satu website moden menggunakan HTML, CSS dan JavaScript. Berikan kod penuh."><div class="quick-icon">✦</div><div><b>Bina website</b><small>Mulakan projek web dari kosong.</small></div></button>
+       <button class="quick" data-prompt="Bantu aku debug kod ini. Terangkan punca ralat dan beri kod yang telah dibaiki."><div class="quick-icon">⌘</div><div><b>Debug kod</b><small>Cari dan baiki masalah kod.</small></div></button>
+       <button class="quick" data-prompt="Bantu aku rancang struktur projek aplikasi AI yang kemas dan boleh dikembangkan."><div class="quick-icon">◫</div><div><b>Rancang projek</b><small>Susun fail dan seni bina aplikasi.</small></div></button>
+       <button class="quick" data-prompt="Terangkan cara menghubungkan API AI ke backend Node.js dengan selamat."><div class="quick-icon">⌁</div><div><b>Sambung API</b><small>Integrasi provider dan backend.</small></div></button>
+      </div>
+     </div>
+     <div class="messages" id="messages"></div>
+    </div>
+    <div class="composer-wrap">
+     <div class="composer">
+      <div class="image-preview" id="imagePreview"></div>
+      <textarea id="prompt" rows="2" placeholder="Tulis idea, arahan atau tampal kod di sini..."></textarea>
+      <div class="composer-tools">
+       <div class="tool-left"><button class="tool" id="attachBtn">＋ Lampiran</button><button class="tool" id="imageBtn">▧ Gambar</button><button class="tool" id="modeBtn">⌘ Code mode</button></div>
+       <div class="tool-right"><span style="font-size:9px;color:#626c7e">Enter ↵</span><button class="send" id="sendBtn" aria-label="Hantar">↑</button></div>
+      </div>
+     </div>
+     <div class="hint">Veyl AI masih dalam pembangunan · Semak kod penting sebelum digunakan</div>
+    </div>
+   </div>
+   <aside class="right-panel">
+    <div class="panel-head"><div><div class="panel-title">Project overview</div><div class="panel-kicker">YOUR WORKSPACE</div></div><span style="color:var(--green);font-size:10px">●</span></div>
+    <div class="panel-card">
+     <h3>AI Providers</h3>
+     <div class="provider-row"><span>Groq</span><span class="provider-state">Belum disambung</span></div>
+     <div class="provider-row"><span>DeepSeek</span><span style="color:#737d90;font-size:9px">Belum disambung</span></div>
+     <button class="panel-action" id="providerBtn">＋ Urus API keys</button>
+    </div>
+    <div class="panel-card">
+     <h3>Project status</h3>
+     <div class="provider-row"><span>Frontend UI</span><span style="color:var(--green)">Preview</span></div>
+     <div class="mini-bar"><i style="width:100%"></i></div>
+     <div class="provider-row"><span>Backend</span><span style="color:#aab1c1">Belum mula</span></div>
+     <div class="mini-bar"><i style="width:0%"></i></div>
+     <div class="provider-row"><span>AI connection</span><span style="color:#aab1c1">Belum mula</span></div>
+     <div class="mini-bar"><i style="width:0%"></i></div>
+    </div>
+    <div class="panel-card">
+     <h3>Project files</h3>
+     <div class="file"><span>▤</span><span>index.html</span></div>
+     <div class="file"><span>▤</span><span>style.css</span></div>
+     <div class="file"><span>▤</span><span>app.js</span></div>
+     <div class="file"><span>▣</span><span>api/ · coming soon</span></div>
+    </div>
+    <div class="panel-card">
+     <h3>Quick note</h3>
+     <div style="font-size:10px;color:#8993a6;line-height:1.7">UI ini ialah prototaip frontend. API sebenar, simpanan chat dan integrasi provider belum disambungkan.</div>
+    </div>
+   </aside>
+  </section>
+ </main>
+</div>
+<div class="toast" id="toast"></div>
+<input type="file" id="fileInput" hidden multiple>
+<input type="file" id="imageInput" accept="image/*" hidden multiple>
+<script>
+const $=s=>document.querySelector(s);
+const toastEl=$("#toast");let toastTimer;
+function toast(message){toastEl.textContent=message;toastEl.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>toastEl.classList.remove("show"),2600)}
+function closeMenu(){$("#sidebar").classList.remove("open");$("#overlay").classList.remove("show")}
+$("#menuBtn").addEventListener("click",()=>{$("#sidebar").classList.add("open");$("#overlay").classList.add("show")});
+$("#overlay").addEventListener("click",closeMenu);
+document.querySelectorAll("[data-toast]").forEach(b=>b.addEventListener("click",()=>toast(b.dataset.toast)));
+document.querySelectorAll(".quick").forEach(b=>b.addEventListener("click",()=>{$("#prompt").value=b.dataset.prompt;$("#prompt").focus()}));
+$("#newChat").addEventListener("click",()=>{$("#messages").innerHTML="";$("#welcome").style.display="";$("#prompt").value="";closeMenu();toast("Perbualan baharu dimulakan.")});
+$("#attachBtn").addEventListener("click",()=>$("#fileInput").click());
+$("#fileInput").addEventListener("change",e=>{if(e.target.files.length)toast(e.target.files.length+" fail dipilih · Upload sebenar akan disambungkan kemudian.")});
+$("#imageBtn").addEventListener("click",()=>$("#imageInput").click());
+$("#imageInput").addEventListener("change",e=>{
+ const preview=$("#imagePreview");preview.innerHTML="";
+ const files=[...e.target.files].filter(file=>file.type.startsWith("image/"));
+ files.forEach(file=>{const img=document.createElement("img");img.src=URL.createObjectURL(file);img.alt=file.name;img.title=file.name;preview.appendChild(img)});
+ if(files.length){const label=document.createElement("span");label.className="image-name";label.textContent=files.length+" gambar dipilih · preview sahaja";preview.appendChild(label);toast(files.length+" gambar dipilih")}
+});
+$("#modeBtn").addEventListener("click",()=>{const b=$("#modeBtn");b.classList.toggle("active");b.style.color=b.classList.contains("active")?"var(--green)":"";toast(b.classList.contains("active")?"Code mode dipilih":"Code mode ditutup")});
+$("#providerBtn").addEventListener("click",()=>toast("Panel API Keys akan dibina dalam milestone backend."));
+$("#settingsBtn").addEventListener("click",()=>toast("Tetapan akan tersedia selepas backend disambungkan."));
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function send(){
+ const input=$("#prompt"),value=input.value.trim();if(!value)return;
+ $("#welcome").style.display="none";
+ const msg=document.createElement("div");msg.className="msg user";
+ msg.innerHTML='<div class="msg-avatar">W</div><div class="msg-body">'+escapeHtml(value).replace(/\n/g,"<br>")+'</div>';
+ $("#messages").appendChild(msg);input.value="";input.style.height="48px";
+ const reply=document.createElement("div");reply.className="msg ai";
+ reply.innerHTML='<div class="msg-avatar">V</div><div class="msg-body"><b style="color:var(--green)">Veyl AI · Preview</b><br>Aku dah terima arahan kau. Sambungan model AI belum diaktifkan dalam prototaip ini. Milestone seterusnya ialah membina backend provider supaya chat ini boleh menggunakan API Groq dan DeepSeek dengan selamat.<div class="codebox"><div class="code-head"><span>STATUS</span><span>Frontend prototype</span></div><pre>UI:          READY\nAI backend:  NOT CONNECTED\nAPI keys:    NOT CONFIGURED</pre></div></div>';
+ $("#messages").appendChild(reply);
+ if(window.matchMedia("(max-width: 680px)").matches){reply.scrollIntoView({behavior:"smooth",block:"end"})}
+ else{$("#chatScroll").scrollTop=$("#chatScroll").scrollHeight;}
+}
+$("#sendBtn").addEventListener("click",send);
+$("#prompt").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();send()}});
+$("#prompt").addEventListener("input",e=>{e.target.style.height="48px";e.target.style.height=Math.min(e.target.scrollHeight,150)+"px"});
+</script>
+</body>
+</html>
